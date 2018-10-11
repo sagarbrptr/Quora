@@ -49,7 +49,7 @@ public class question
         String user = "GOD" ;
         String pass = "Test#123" ;
         
-        String search_questio_query = "SELECT * FROM Question WHERE question LIKE "+"'%"+keyword+"%';";
+        String search_questio_query = "SELECT * FROM Question WHERE LOWER(question) LIKE "+"LOWER('%"+keyword+"%');";
         ArrayList<question> result = new ArrayList<question>();
         try
         {
@@ -64,28 +64,32 @@ public class question
              int len=0;
              while(rs.next())
              {
-                 System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "
-                 +rs.getString(3)+" "+rs.getInt(4));                
-                 
-//----------------------------------------------------------------------------------------------------------------------------                 
-                 String get_username = "SELECT username FROM User WHERE user_id = "+"'"+rs.getInt(2)+"';";		// obtain username from user_id
-                 
-                 Statement sub_query = con.createStatement();
-                 ResultSet username_rs =  sub_query.executeQuery(get_username); 
-                 
-                 question res= new question();
-                 while(username_rs.next())
-                	 res.username = username_rs.getString(1);
-//----------------------------------------------------------------------------------------------------------------------------                 
-                 
-                 res.que_id = rs.getInt(1);
-                 res.question = rs.getString(3);
-                 res.upvote = rs.getInt(4);
-                 res.downvote = rs.getInt(5);
-                 
-                 result.add(res);
-                 
-                 len++;
+            	 
+            	 if(rs.getInt(6) == 0)		//if not flagged, then only add in result set
+            	 {
+	                 System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "
+	                 +rs.getString(3)+" "+rs.getInt(4));                
+	                 
+	//----------------------------------------------------------------------------------------------------------------------------                 
+	                 String get_username = "SELECT username FROM User WHERE user_id = "+"'"+rs.getInt(2)+"';";		// obtain username from user_id
+	                 
+	                 Statement sub_query = con.createStatement();
+	                 ResultSet username_rs =  sub_query.executeQuery(get_username); 
+	                 
+	                 question res= new question();
+	                 while(username_rs.next())
+	                	 res.username = username_rs.getString(1);
+	//----------------------------------------------------------------------------------------------------------------------------                 
+	                 
+	                 res.que_id = rs.getInt(1);
+	                 res.question = rs.getString(3);
+	                 res.upvote = rs.getInt(4);
+	                 res.downvote = rs.getInt(5);
+	                 
+	                 result.add(res);
+	                 
+	                 len++;
+            	 }
                  
              }
 
@@ -107,7 +111,7 @@ public class question
         String user = "GOD" ;
         String pass = "Test#123" ;
         
-        String display_question_query = "SELECT que_id,question,user_id,up_vote,down_vote FROM Question WHERE que_id = "+"'"+que_id+"';";
+        String display_question_query = "SELECT que_id,question,user_id,up_vote,down_vote,flag FROM Question WHERE que_id = "+"'"+que_id+"';";
         
         question result = new question();
         
@@ -121,21 +125,23 @@ public class question
              
              while(rs.next())
              {
-            	 
+            	 if(rs.getInt(6) == 0)	//if not flagged, then only add in result set
+            	 {
 //----------------------------------------------------------------------------------------------------------------------------
-            	 String get_username = "SELECT username FROM User WHERE user_id = "+"'"+rs.getInt(3)+"';";	//obtain username from user_id
-                 
-                 Statement sub_query = con.createStatement();
-                 ResultSet username_rs =  sub_query.executeQuery(get_username); 
-                 
-                 while(username_rs.next())
-                	 result.username = username_rs.getString(1);
+	            	 String get_username = "SELECT username FROM User WHERE user_id = "+"'"+rs.getInt(3)+"';";	//obtain username from user_id
+	                 
+	                 Statement sub_query = con.createStatement();
+	                 ResultSet username_rs =  sub_query.executeQuery(get_username); 
+	                 
+	                 while(username_rs.next())
+	                	 result.username = username_rs.getString(1);
 //---------------------------------------------------------------------------------------------------------------------------- 
-            	 
-                 result.que_id = rs.getInt(1);
-            	 result.question = rs.getString(2);            	 
-            	 result.upvote = rs.getInt(4);
-            	 result.downvote = rs.getInt(5);
+	            	 
+	                 result.que_id = rs.getInt(1);
+	            	 result.question = rs.getString(2);            	 
+	            	 result.upvote = rs.getInt(4);
+	            	 result.downvote = rs.getInt(5);
+            	 }
              }
              
              con.close();
@@ -150,7 +156,166 @@ public class question
         }
     }
     
-}
+    public static int up_vote(int user_id, int que_id )
+    {
+    	String url = "jdbc:mysql://localhost:3306/quora";
+        String user = "GOD" ;
+        String pass = "Test#123" ;
+        
+        String check = "select up_vote from question_vote where user_id = '"+user_id+"' and que_id = '"+que_id+"';";
 
+        
+        String vote_question = "insert into question_vote(que_id,user_id,up_vote) values('"+que_id+"','"+user_id+"',1) "
+        		+ "on duplicate key update  up_vote = values(up_vote);";
+        
+        try
+        {
+        	int no_user=1;
+        	int curr_vote = -1;
+        	
+        	Class.forName("com.mysql.jdbc.Driver");
+        	Connection con = DriverManager.getConnection(url,user,pass);
+        	
+        	 Statement query = con.createStatement();
+             ResultSet checker =   query.executeQuery(check);
+             
+             while(checker.next())
+             {
+            	 no_user = 0;
+            	 
+            	 curr_vote = checker.getInt(1);
+             }
+             
+             if(curr_vote == 1)
+             {
+            	 System.out.println("Already voted");
+            	 return -1; 				//
+             }	
+             
+             else
+            	 query.executeUpdate(vote_question);
+             
+             return 1;
+             
+        }
+        
+        catch(Exception E)
+        {
+        	System.out.println("ERROR!!!\n");
+            //return null;
+            return 0;
+        }
+                
+    }
+    
+    public static int down_vote(int user_id, int que_id )
+    {
+    	String url = "jdbc:mysql://localhost:3306/quora";
+        String user = "GOD" ;
+        String pass = "Test#123" ;
+        
+        String check = "select down_vote from question_vote where user_id = '"+user_id+"' and que_id = '"+que_id+"';";
+
+        
+        String vote_question = "insert into question_vote(que_id,user_id,down_vote) values('"+que_id+"','"+user_id+"',1) "
+        		+ "on duplicate key update  down_vote = values(down_vote);";
+        
+        try
+        {
+        	int no_user=1;
+        	int curr_vote = -1;
+        	
+        	Class.forName("com.mysql.jdbc.Driver");
+        	Connection con = DriverManager.getConnection(url,user,pass);
+        	
+        	 Statement query = con.createStatement();
+             ResultSet checker =   query.executeQuery(check);
+             
+             while(checker.next())
+             {
+            	 no_user = 0;
+            	 
+            	 curr_vote = checker.getInt(1);
+             }
+             
+             if(curr_vote == 1)
+             {
+            	 System.out.println("Already voted");
+            	 return -1; 				//
+             }	
+             
+             else
+            	 query.executeUpdate(vote_question);
+             
+             return 1;
+             
+        }
+        
+        catch(Exception E)
+        {
+        	System.out.println("ERROR!!!\n");
+            //return null;
+            return 0;
+        }
+                
+    }
+    public static int get_up_vote(int que_id)
+    {
+    	String url = "jdbc:mysql://localhost:3306/quora";
+        String user = "GOD" ;
+        String pass = "Test#123" ;
+        
+        String get_vote = "select sum(up_vote)  from question_vote where que_id='"+que_id+"';";
+        
+        try
+        {
+        	Class.forName("com.mysql.jdbc.Driver");
+        	Connection con = DriverManager.getConnection(url,user,pass);
+        	
+        	 Statement query = con.createStatement();
+        	 ResultSet rs = query.executeQuery(get_vote);
+             while(rs.next())
+            	 return rs.getInt(1);
+             con.close(); 
+             return 1;
+        }
+        
+        catch(Exception E)
+        {
+        	System.out.println("ERROR!!!\n");
+            //return null;
+            return 0;
+        }
+    }
+    public static int get_down_vote(int que_id)
+    {
+    	String url = "jdbc:mysql://localhost:3306/quora";
+        String user = "GOD" ;
+        String pass = "Test#123" ;
+        
+        String get_vote = "select sum(down_vote)  from question_vote where que_id='"+que_id+"';";
+        
+        try
+        {
+        	Class.forName("com.mysql.jdbc.Driver");
+        	Connection con = DriverManager.getConnection(url,user,pass);
+        	
+        	 Statement query = con.createStatement();
+        	 ResultSet rs = query.executeQuery(get_vote);
+             while(rs.next())
+            	 return rs.getInt(1);
+             con.close(); 
+             return 1;
+        }
+        
+        catch(Exception E)
+        {
+        	System.out.println("ERROR!!!\n");
+            //return null;
+            return 0;
+        }
+    }
+    
+}
 
 

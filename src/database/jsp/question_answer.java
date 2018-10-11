@@ -21,11 +21,50 @@ public class question_answer {
         ans=new answer();
     }
     
-    public static ArrayList<question_answer> trending()
+    public void callProcedure()
+    {
+    	String url = "jdbc:mysql://localhost:3306/quora";
+        String user = "GOD" ;
+        String pass = "Test#123" ;
+        try
+        {
+        	Class.forName("com.mysql.jdbc.Driver");
+        	Connection con = DriverManager.getConnection(url,user,pass);
+        	
+	    	String callp="{ CALL UPDATE_QUESTION_UP_VOTE() }";
+	    	CallableStatement cst= con.prepareCall(callp);
+	    	cst.executeQuery();
+	    	
+	    	callp="{ CALL UPDATE_QUESTION_DOWN_VOTE() }";
+	    	cst= con.prepareCall(callp);
+	    	cst.executeQuery();
+	    	
+	    	callp="{ CALL UPDATE_ANSWER_UP_VOTE() }";
+	    	cst= con.prepareCall(callp);
+	    	cst.executeQuery();
+	    	
+	    	callp="{ CALL UPDATE_ANSWER_DOWN_VOTE() }";
+	    	cst= con.prepareCall(callp);
+	    	cst.executeQuery();
+	    	System.out.println("Done Calling procedure!!!\n");
+            con.close();             
+        
+       }
+       
+       catch(Exception e)
+       {
+           System.out.println("ERROR in call procedure!!!\n");
+
+       }
+	    	
+    }
+   /* public static ArrayList<question_answer> trending()
     {
         String url = "jdbc:mysql://localhost:3306/quora";
         String user = "GOD" ;
         String pass = "Test#123" ;
+        
+        
         
         String home_query = "select Question.que_id, Question.question, Question.user_id, Question.up_vote, Question.down_vote"
                 + ", Answer.ans_id, Answer.answer, Answer.user_id, Answer.up_vote, Answer.down_vote "
@@ -68,13 +107,19 @@ public class question_answer {
                      q.username = username_que.getString(1);
                 
                  //get username of answer
-                 String get_username_ans = "SELECT username FROM User WHERE user_id = "+"'"+rs.getInt(8)+"';";		// obtain username from user_id_ans
+                 String get_username_ans = "SELECT username,admin FROM User WHERE user_id = "+"'"+rs.getInt(8)+"';";		// obtain username from user_id_ans
                  
                  sub_query = con.createStatement();
                  ResultSet username_ans =  sub_query.executeQuery(get_username_ans); 
                  
                  while(username_ans.next())
-                     a.username = username_ans.getString(1);
+                 {
+                	 if(username_ans.getInt(2) == 0)
+                		 a.username = username_ans.getString(1);
+                	 
+                	 else
+                		 a.username = "admin";
+                 }
 
 //----------------------------------------------------------------------------------------------------------------------------                 
                  
@@ -114,15 +159,16 @@ public class question_answer {
             return result;
         }
         
-    }
+    }*/
     
     public static ArrayList<question_answer> search_question_answer(String keyword)
     {
         String url = "jdbc:mysql://localhost:3306/quora";
         String user = "GOD" ;
         String pass = "Test#123" ;
-        
-        String search_questio_query = "SELECT * FROM Question WHERE question LIKE "+"'%"+keyword+"%';";
+        question_answer ob=new question_answer();
+        ob.callProcedure();		// Procedure Calling is done here
+        String search_questio_query = "SELECT * FROM Question WHERE LOWER(question) LIKE "+"LOWER('%"+keyword+"%') order by up_vote desc,down_vote asc;";
         ArrayList<question_answer> result = new ArrayList<question_answer>();
         try
         {
@@ -135,70 +181,89 @@ public class question_answer {
              //System.out.println("IGI\n");
              
              int len=0;
-             while(rs.next())
+             while(rs.next() )			
              {
-                 System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "
-                 +rs.getString(3)+" "+rs.getInt(4));                
-                 
-//----------------------------------------------------------------------------------------------------------------------------                 
-                 String get_username = "SELECT username FROM User WHERE user_id = "+"'"+rs.getInt(2)+"';";		// obtain username from user_id
-                 
-                 Statement sub_query = con.createStatement();
-                 ResultSet username_rs =  sub_query.executeQuery(get_username); 
-                 
-                 question q= new question();
-                 while(username_rs.next())
-                	 q.username = username_rs.getString(1);
-//----------------------------------------------------------------------------------------------------------------------------                 
-                 
-                 q.que_id = rs.getInt(1);
-                 q.question = rs.getString(3);
-                 q.upvote = rs.getInt(4);
-                 q.downvote = rs.getInt(5);
-                 
-                //Add one answer to be displayed
-                
-                answer a=new answer();
-                
-                //get username of answer
-                 
-
-                //get one ans from que_id by upvote desc,downvote asc
-                
-                String que_id_string = Integer.toString(rs.getInt(1));
-                
-                String get_ans_query = "SELECT ans_id,que_id,user_id,answer,up_vote,down_vote FROM Answer where que_id = '"+
-                        que_id_string + "' order by up_vote desc, down_vote asc limit 1;";
-                
-                sub_query = con.createStatement();
-                
-                ResultSet get_one_ans =  sub_query.executeQuery(get_ans_query);
-                 
-                while(get_one_ans.next())
-                {
-                    a.answer = get_one_ans.getString(4);
-                    a.ans_id = get_one_ans.getInt(1);
-                    a.upvote = get_one_ans.getInt(5);
-                    a.downvote = get_one_ans.getInt(6);
-                    
-                    String get_username_ans = "SELECT username FROM User WHERE user_id = "+"'"+ get_one_ans.getInt(3)+"';";		// obtain username from user_id_ans
-                 
-                    Statement sub_sub_query = con.createStatement();
-                    ResultSet username_ans =  sub_sub_query.executeQuery(get_username_ans); 
-
-                    while(username_ans.next())
-                        a.username = username_ans.getString(1);
-                }
-                
-                 len++;
-                 // Question_Answer Wrapped object
-                
-                question_answer obj= new question_answer();
-                
-                obj.que = q;
-                obj.ans = a;
-                
-                result.add(obj);
+            	 
+            	 if(rs.getInt(6)==0)
+            	 {
+            	 
+	                 System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "
+	                 +rs.getString(3)+" "+rs.getInt(4));                
+	                 
+	//----------------------------------------------------------------------------------------------------------------------------                 
+	                 String get_username = "SELECT username FROM User WHERE user_id = "+"'"+rs.getInt(2)+"';";		// obtain username from user_id
+	                 
+	                 Statement sub_query = con.createStatement();
+	                 ResultSet username_rs =  sub_query.executeQuery(get_username); 
+	                 
+	                 question q= new question();
+	                 while(username_rs.next())
+	                	 q.username = username_rs.getString(1);
+	//----------------------------------------------------------------------------------------------------------------------------                 
+	                 
+	                 q.que_id = rs.getInt(1);
+	                 q.question = rs.getString(3);
+	                 q.upvote = rs.getInt(4);
+	                 q.downvote = rs.getInt(5);
+	                 
+	                //Add one answer to be displayed
+	                
+	                answer a=new answer();
+	                
+	                //get username of answer
+	                 
+	
+	                //get one ans from que_id by upvote desc,downvote asc
+	                
+	                String que_id_string = Integer.toString(rs.getInt(1));
+	                
+	                String get_ans_query = "SELECT * FROM Answer where que_id = '"+
+	                        que_id_string + "' order by up_vote desc, down_vote asc limit 1;";
+	                
+	                sub_query = con.createStatement();
+	                
+	                ResultSet get_one_ans =  sub_query.executeQuery(get_ans_query);
+	                 
+	                while(get_one_ans.next())		
+	                {
+	                	
+	                	if(get_one_ans.getInt(7)==0)	// pata nahi kyu nahi chal raha
+	                	{
+	                		int count=1;
+		                    a.answer = get_one_ans.getString(4);
+		                    a.ans_id = get_one_ans.getInt(1);
+		                    a.upvote = get_one_ans.getInt(5);
+		                    a.downvote = get_one_ans.getInt(6);
+		                    
+		                    String get_username_ans = "SELECT username,admin FROM User WHERE user_id = "+"'"+ get_one_ans.getInt(3)+"';";		// obtain username from user_id_ans
+		                 
+		                    Statement sub_sub_query = con.createStatement();
+		                    ResultSet username_ans =  sub_sub_query.executeQuery(get_username_ans); 
+		
+		                    while(username_ans.next())
+		                    {
+		                   	 if(username_ans.getInt(2) == 0)
+		                   		 a.username = username_ans.getString(1);
+		                   	 
+		                   	 else
+		                   		 a.username = "admin";
+		                    }
+		                    
+		                    System.out.println(count);
+		                    count++;
+	                	}
+	                }
+	                
+	                 len++;
+	                 // Question_Answer Wrapped object
+	                
+	                question_answer obj= new question_answer();
+	                
+	                obj.que = q;
+	                obj.ans = a;
+	                
+	                result.add(obj);
+            	 }
              }
 
              con.close();             

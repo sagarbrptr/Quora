@@ -11,15 +11,16 @@ import java.util.*;
  *
  * @author sagar
  */
-public class answer {
+public class answer
+{
     
     public String username, answer;
-    public int upvote, downvote, ans_id;
+    public int upvote, downvote, ans_id,flag;
     
     public void answer()
     {
         username=answer="";
-        upvote=downvote=ans_id=0;
+        upvote=downvote=ans_id=flag=0;
     }
     public static int insert_answer(int user_id,int que_id,String answer)		// user_id == coming from login(session) 
     {																			// question == coming from ask_question page    	
@@ -52,7 +53,7 @@ public class answer {
     }
     
     public static ArrayList<answer> display_answer(int que_id)		// que_id == id coming from question
-    {    																	   // result = array of object(has to be passed to constructor first)	
+    {    																	  	
     	String url = "jdbc:mysql://localhost:3306/quora";
         String user = "GOD" ;
         String pass = "Test#123" ;
@@ -74,28 +75,37 @@ public class answer {
              int len=0;
              while(rs.next())
              {
-                 System.out.println(rs.getInt(1)+"  "+rs.getInt(2)+" " +rs.getInt(3)+ " "+ rs.getString(4)+"  "
-                 +rs.getInt(5)+" "+rs.getInt(6));                
-                 
-//----------------------------------------------------------------------------------------------------------------------------                 
-                 String get_username = "SELECT username FROM User WHERE user_id = "+"'"+rs.getInt(2)+"';";		// obtain username from user_id
-                 
-                 Statement sub_query = con.createStatement();
-                 ResultSet username_rs =  sub_query.executeQuery(get_username); 
-                 
-                 answer res= new answer();
-                 while(username_rs.next())
-                	 res.username = username_rs.getString(1);
-//----------------------------------------------------------------------------------------------------------------------------                 
-                 
-                 res.ans_id = rs.getInt(1);
-                 res.answer = rs.getString(4);
-                 res.upvote = rs.getInt(5);
-                 res.downvote = rs.getInt(6);
-                 
-                 result.add(res);
-                 
-                 len++;
+            	 if(rs.getInt(7) == 0) //if not flagged, then only add in result set
+	            {
+            		 System.out.println(rs.getInt(1)+"  "+rs.getInt(2)+" " +rs.getInt(3)+ " "+ rs.getString(4)+"  "
+	            				 +rs.getInt(5)+" "+rs.getInt(6));                
+	                 
+	//----------------------------------------------------------------------------------------------------------------------------                 
+	                 String get_username = "SELECT username,admin FROM User WHERE user_id = "+"'"+rs.getInt(3)+"';";		
+	                 
+	                 Statement sub_query = con.createStatement();
+	                 ResultSet username_rs =  sub_query.executeQuery(get_username); 
+	                 
+	                 answer res= new answer();
+	                 while(username_rs.next())
+	                 {
+	                	 if(username_rs.getInt(2)==0)
+	                		 res.username = username_rs.getString(1);
+	                	 
+	                	 else
+	                		 res.username = "admin";
+	                 }
+	//----------------------------------------------------------------------------------------------------------------------------                 
+	                 
+	                 res.ans_id = rs.getInt(1);
+	                 res.answer = rs.getString(4);
+	                 res.upvote = rs.getInt(5);
+	                 res.downvote = rs.getInt(6);
+	                 
+	                 result.add(res);
+	                 
+	                 len++;
+            	 }
                  
              }
 
@@ -110,4 +120,168 @@ public class answer {
             return result;
         }
     }
+    
+    public static int up_vote(int user_id, int ans_id )
+    {
+    	String url = "jdbc:mysql://localhost:3306/quora";
+        String user = "GOD" ;
+        String pass = "Test#123" ;
+        
+        String check = "select up_vote from answer_vote where user_id = '"+user_id+"' and ans_id = '"+ans_id+"';";
+                       
+        
+        String vote_answer = "insert into answer_vote(ans_id,user_id,up_vote) values('"+ans_id+"','"+user_id+"',1) "
+        		+ "on duplicate key update  up_vote = values(up_vote);";
+             
+        
+        try
+        {
+        	int no_user=1;
+        	int curr_vote = -1;
+        	
+        	Class.forName("com.mysql.jdbc.Driver");
+        	Connection con = DriverManager.getConnection(url,user,pass);
+        	
+        	 Statement query = con.createStatement();
+             ResultSet checker =   query.executeQuery(check);
+             
+             while(checker.next())
+             {
+            	 no_user = 0;
+            	 
+            	 curr_vote = checker.getInt(1);
+             }
+             
+             if(curr_vote == 1)
+             {
+            	 System.out.println("Already voted");
+            	 return -1; 				//
+             }	
+             
+             else
+            	 query.executeUpdate(vote_answer);
+             
+             return 1;
+             
+        }
+        
+        catch(Exception E)
+        {
+        	System.out.println("ERROR in adding up_vote to answer!!!\n");
+            //return null;
+            return 0;
+        }
+                
+    }
+    
+    public static int down_vote(int user_id, int ans_id )
+    {
+    	String url = "jdbc:mysql://localhost:3306/quora";
+        String user = "GOD" ;
+        String pass = "Test#123" ;
+        
+        String check = "select down_vote from answer_vote where user_id = '"+user_id+"' and ans_id = '"+ans_id+"';";
+
+        
+        String vote_answer = "insert into answer_vote(ans_id,user_id,down_vote) values('"+ans_id+"','"+user_id+"',1) "
+        		+ "on duplicate key update  down_vote = values(down_vote);";
+        
+        try
+        {
+        	int no_user=1;
+        	int curr_vote = -1;
+        	
+        	Class.forName("com.mysql.jdbc.Driver");
+        	Connection con = DriverManager.getConnection(url,user,pass);
+        	
+        	 Statement query = con.createStatement();
+             ResultSet checker =   query.executeQuery(check);
+             
+             while(checker.next())
+             {
+            	 no_user = 0;
+            	 
+            	 curr_vote = checker.getInt(1);
+             }
+             
+             if(curr_vote == 1)
+             {
+            	 System.out.println("Already voted");
+            	 return -1; 				//
+             }	
+             
+             else
+            	 query.executeUpdate(vote_answer);
+             
+             return 1;
+             
+        }
+        
+        catch(Exception E)
+        {
+        	System.out.println("ERROR in adding down_vote to answer!!!\n");
+            //return null;
+            return 0;
+        }
+                
+    }
+    public static int get_up_vote(int ans_id)
+    {
+    	String url = "jdbc:mysql://localhost:3306/quora";
+        String user = "GOD" ;
+        String pass = "Test#123" ;
+        
+        String get_vote = "select sum(up_vote)  from answer_vote where ans_id='"+ans_id+"';";
+        
+        try
+        {
+        	Class.forName("com.mysql.jdbc.Driver");
+        	Connection con = DriverManager.getConnection(url,user,pass);
+        	
+        	 Statement query = con.createStatement();
+        	 ResultSet rs = query.executeQuery(get_vote);
+             while(rs.next())
+            	 return rs.getInt(1);
+             con.close(); 
+             return 1;
+        }
+        
+        catch(Exception E)
+        {
+        	System.out.println("ERROR!!!\n");
+            //return null;
+            return 0;
+        }
+    }
+    public static int get_down_vote(int ans_id)
+    {
+    	String url = "jdbc:mysql://localhost:3306/quora";
+        String user = "GOD" ;
+        String pass = "Test#123" ;
+        
+        String get_vote = "select sum(down_vote)  from answer_vote where ans_id='"+ans_id+"';";
+        
+        try
+        {
+        	Class.forName("com.mysql.jdbc.Driver");
+        	Connection con = DriverManager.getConnection(url,user,pass);
+        	
+        	 Statement query = con.createStatement();
+        	 ResultSet rs = query.executeQuery(get_vote);
+             while(rs.next())
+            	 return rs.getInt(1);
+             con.close(); 
+             return 1;
+        }
+        
+        catch(Exception E)
+        {
+        	System.out.println("ERROR!!!\n");
+            //return null;
+            return 0;
+        }
+    }
+    
 }
+
+

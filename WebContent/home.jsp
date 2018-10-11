@@ -43,10 +43,7 @@
 			else
 				out.println("Error while question insertion");*/
 			
-			/*question result[] = new question[100];	
-				
-			for(int i=0;i<100;i++)					// search_question does not work without this
-				result[i] = new question();*/
+			
 				
 			ArrayList<question> q= question.search_question("");
 			
@@ -60,7 +57,7 @@
 				for(int i=0;i<q.size();i++)
 				{
                                         out.println(q.get(i).username + " " + q.get(i).question + " " + q.get(i).upvote + " " + q.get(i).downvote + "<br>");
-					//out.println(q[i].username + " " + q[i].question + " " + q[i].upvote + " " + q[i].downvote + "<br>");
+					
 				}
 			}
 				

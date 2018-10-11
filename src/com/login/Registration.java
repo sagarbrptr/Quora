@@ -59,6 +59,7 @@ public class Registration extends HttpServlet
 				session.setAttribute("message","<div class=\"alert alert-danger alert-dismissible fade show\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>"
 						+	"<strong>Username</strong> already used!!! </div>");
 				System.out.println("username already used !!!!");
+				conn.close();
 				response.sendRedirect("register.jsp");
 				return;
 			}

@@ -27,7 +27,9 @@ public class answer
         String url = "jdbc:mysql://localhost:3306/quora";
             String user = "GOD" ;
             String pass = "Test#123" ;
-            
+            System.out.println(user_id);
+            System.out.println(que_id);
+            System.out.println(answer);
             String user_id_string = Integer.toString(user_id);
             String que_id_string = Integer.toString(que_id);
             
@@ -47,7 +49,7 @@ public class answer
 
             catch(Exception e)
             {
-                System.out.println("ERROR!!!\n");
+                System.out.println("ERROR in insert answer!!\n");
                 return 0;			// print error
             }
     }
@@ -161,6 +163,8 @@ public class answer
              else
             	 query.executeUpdate(vote_answer);
              
+             con.close();
+             
              return 1;
              
         }
@@ -213,6 +217,7 @@ public class answer
              else
             	 query.executeUpdate(vote_answer);
              
+             con.close();
              return 1;
              
         }

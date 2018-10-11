@@ -201,7 +201,7 @@
  				//out.println("IGI");
  				
  				//if(request.getSession(false) == null)
- 				if((request.getSession(false) == null) || (session.getAttribute("username")==null) )
+ 				/*if((request.getSession(false) == null) || (session.getAttribute("username")==null) )
  				{
  					
  					
@@ -210,7 +210,7 @@
  					 				
  				}
  			
- 				else
+ 				else*/	// Commented because this validation is done on add_question page and the message "Pl Login first" is added over there
  				{
  					
  					out.println("<button type='button' class='btn btn-danger btn-lg btn-block'"+

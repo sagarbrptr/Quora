@@ -34,12 +34,14 @@ public class Login extends HttpServlet
 				session.setAttribute("message","<div class=\"alert alert-success alert-dismissible\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>"
 						+	"<strong>Login successful</strong></div>");
 				response.sendRedirect("admin_dashboard.jsp");
+				return;
 			}
 			else
 			{
 				session.setAttribute("message","<div class=\"alert alert-success alert-dismissible\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>"
 						+	"<strong>Login successful</strong></div>");
 				response.sendRedirect("index.jsp");
+				return;
 			}
 		}
 		else

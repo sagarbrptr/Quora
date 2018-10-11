@@ -8,12 +8,13 @@ import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 
 public class LoginDao {
-	String sql="select * from User where username=? and password=?";
-	String url = "jdbc:mysql://localhost:3306/quora";
-    String user = "GOD" ;
-    String password = "Test#123" ;
+	
     public boolean check(String uname, String pass)
     {
+    	String sql="select * from User where username=? and password=?";
+    	String url = "jdbc:mysql://localhost:3306/quora";
+        String user = "GOD" ;
+        String password = "Test#123" ;
     	try
         {
             Class.forName("com.mysql.jdbc.Driver");
@@ -26,6 +27,7 @@ public class LoginDao {
             ResultSet rs = st.executeQuery();
             if(rs.next())
             {
+            	con.close();
             	return true;
             	
             }
@@ -41,6 +43,10 @@ public class LoginDao {
     }
     public int getuser_id(String uname, String pass)
     {
+    	String sql="select * from User where username=? and password=?";
+    	String url = "jdbc:mysql://localhost:3306/quora";
+        String user = "GOD" ;
+        String password = "Test#123" ;
     	try
         {
             Class.forName("com.mysql.jdbc.Driver");
@@ -49,11 +55,15 @@ public class LoginDao {
             PreparedStatement st=(PreparedStatement) con.prepareStatement(sql);
             st.setString(1, uname);
             st.setString(2, pass);                      
-           
+            
             ResultSet rs = st.executeQuery();
             if(rs.next())
             {
-            	return rs.getInt(1);
+            	int ret_val=rs.getInt(1);
+            	System.out.println("in getuser_id before conclose "+rs.getInt(1));
+            	con.close();
+            	
+            	return ret_val;
             	
             }
            
@@ -68,6 +78,10 @@ public class LoginDao {
     }
     public boolean isadmin(String uname, String pass)
     {
+    	String sql="select * from User where username=? and password=?";
+    	String url = "jdbc:mysql://localhost:3306/quora";
+        String user = "GOD" ;
+        String password = "Test#123" ;
     	try
         {
             Class.forName("com.mysql.jdbc.Driver");
@@ -80,8 +94,12 @@ public class LoginDao {
             ResultSet rs = st.executeQuery();
             if(rs.next())
             {
-            	if(rs.getInt(4)==0)	
+            	if(rs.getInt(4)==0)
+            	{
+            		con.close();
             		return false;
+            	}
+            	con.close();
             	return true;
             	
             }

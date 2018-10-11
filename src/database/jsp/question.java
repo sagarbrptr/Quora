@@ -150,7 +150,7 @@ public class question
         
         catch(Exception e)
         {
-            System.out.println("ERROR!!!\n");
+            System.out.println("ERROR in display of one question!!!\n");
             return result;
             //return 0;
         }
@@ -194,7 +194,7 @@ public class question
              
              else
             	 query.executeUpdate(vote_question);
-             
+             con.close();
              return 1;
              
         }
@@ -246,7 +246,7 @@ public class question
              
              else
             	 query.executeUpdate(vote_question);
-             
+             con.close();
              return 1;
              
         }

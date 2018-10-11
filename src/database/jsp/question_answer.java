@@ -6,6 +6,8 @@
 package database.jsp;
 import java.sql.*;
 import java.util.*;
+import java.sql.CallableStatement;
+
 
 /**
  *
@@ -34,20 +36,26 @@ public class question_answer {
 	    	String callp="{ CALL UPDATE_QUESTION_UP_VOTE() }";
 	    	CallableStatement cst= con.prepareCall(callp);
 	    	cst.executeQuery();
+	    
+	    	
 	    	
 	    	callp="{ CALL UPDATE_QUESTION_DOWN_VOTE() }";
 	    	cst= con.prepareCall(callp);
 	    	cst.executeQuery();
 	    	
+	    	
+	    	
 	    	callp="{ CALL UPDATE_ANSWER_UP_VOTE() }";
 	    	cst= con.prepareCall(callp);
 	    	cst.executeQuery();
+	    	
+	    	
 	    	
 	    	callp="{ CALL UPDATE_ANSWER_DOWN_VOTE() }";
 	    	cst= con.prepareCall(callp);
 	    	cst.executeQuery();
 	    	System.out.println("Done Calling procedure!!!\n");
-            con.close();             
+                         
         
        }
        

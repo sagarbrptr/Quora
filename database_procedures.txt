@@ -1,0 +1,183 @@
+DELIMITER $$
+DROP PROCEDURE IF EXISTS UPDATE_QUESTION_UP_VOTE$$
+CREATE PROCEDURE UPDATE_QUESTION_UP_VOTE()
+BEGIN
+-- declare NOT FOUND handler
+DECLARE done TINYINT DEFAULT 0;
+DECLARE fetched_q_id INT;
+-- declare cursor for Question table
+DECLARE que_id_cursor CURSOR FOR SELECT que_id from Question;
+
+
+DECLARE CONTINUE HANDLER FOR NOT FOUND 
+BEGIN
+	SET done = 1;
+END;
+
+OPEN que_id_cursor;
+
+get_id: LOOP
+ FETCH que_id_cursor INTO fetched_q_id;
+ IF done THEN 
+	 LEAVE get_id;
+ END IF;
+ 
+ -- display
+ 
+ update Question set up_vote= ifnull((select sum(up_vote) from question_vote where question_vote.que_id=fetched_q_id),0) where Question.que_id=fetched_q_id;
+ 
+END LOOP get_id;
+
+CLOSE que_id_cursor;
+
+END$$
+ 
+DELIMITER ;
+
+
+
+
+
+
+
+
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS UPDATE_QUESTION_DOWN_VOTE$$
+CREATE PROCEDURE UPDATE_QUESTION_DOWN_VOTE()
+BEGIN
+-- declare NOT FOUND handler
+DECLARE done TINYINT DEFAULT 0;
+DECLARE fetched_q_id INT;
+-- declare cursor for Question table
+DECLARE que_id_cursor CURSOR FOR SELECT que_id from Question;
+
+
+DECLARE CONTINUE HANDLER FOR NOT FOUND 
+BEGIN
+	SET done = 1;
+END;
+
+OPEN que_id_cursor;
+
+get_id: LOOP
+ FETCH que_id_cursor INTO fetched_q_id;
+ IF done THEN 
+	 LEAVE get_id;
+ END IF;
+ 
+ -- display
+ 
+update Question set down_vote= ifnull((select sum(down_vote) from question_vote where question_vote.que_id=fetched_q_id),0) where Question.que_id=fetched_q_id;
+ 
+END LOOP get_id;
+
+CLOSE que_id_cursor;
+END$$
+ 
+DELIMITER ;
+
+
+
+
+
+
+
+
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS UPDATE_ANSWER_DOWN_VOTE$$
+CREATE PROCEDURE UPDATE_ANSWER_DOWN_VOTE()
+BEGIN
+-- declare NOT FOUND handler
+DECLARE done TINYINT DEFAULT 0;
+DECLARE fetched_a_id INT;
+-- declare cursor for Answer table
+DECLARE ans_id_cursor CURSOR FOR SELECT ans_id from Answer;
+
+
+DECLARE CONTINUE HANDLER FOR NOT FOUND 
+BEGIN
+	SET done = 1;
+END;
+
+OPEN ans_id_cursor;
+
+get_id: LOOP
+ FETCH ans_id_cursor INTO fetched_a_id;
+ IF done THEN 
+	 LEAVE get_id;
+ END IF;
+ 
+ -- display
+ 
+ update Answer set down_vote= ifnull((select sum(down_vote) from answer_vote where answer_vote.ans_id=fetched_a_id),0) where Answer.ans_id=fetched_a_id;
+ 
+END LOOP get_id;
+
+CLOSE ans_id_cursor;
+
+END$$
+ 
+DELIMITER ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS UPDATE_ANSWER_UP_VOTE$$
+CREATE PROCEDURE UPDATE_ANSWER_UP_VOTE()
+BEGIN
+-- declare NOT FOUND handler
+DECLARE done TINYINT DEFAULT 0;
+DECLARE fetched_a_id INT;
+-- declare cursor for Answer table
+DECLARE ans_id_cursor CURSOR FOR SELECT ans_id from Answer;
+
+
+DECLARE CONTINUE HANDLER FOR NOT FOUND 
+BEGIN
+	SET done = 1;
+END;
+
+OPEN ans_id_cursor;
+
+get_id: LOOP
+ FETCH ans_id_cursor INTO fetched_a_id;
+ IF done THEN 
+	 LEAVE get_id;
+ END IF;
+ 
+ -- display
+ 
+ update Answer set up_vote= ifnull((select sum(up_vote) from answer_vote where answer_vote.ans_id=fetched_a_id),0) where Answer.ans_id=fetched_a_id;
+ 
+END LOOP get_id;
+
+CLOSE ans_id_cursor;
+
+END$$
+ 
+DELIMITER ;
+
+
+
+
+

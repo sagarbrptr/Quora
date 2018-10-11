@@ -121,11 +121,12 @@
                 if(result.size() == 0)
                 {
                 	out.println("No Answers for the given question");
-                        out.println("<br><br>   <a href='add_answer.jsp' class='btn btn-primary'>Add Answer &rarr;</a>");
+                	session.setAttribute("que_id_integer",request.getParameter("que_id"));		// !!!!! SAGAR WAS HERE !!!!
+                			out.println("<br><br>   <a href='add_answer.jsp' class='btn btn-primary'>Add Answer &rarr;</a>");
                         
 						//out.println(request.getParameter("que_id"));
 						
-						session.setAttribute("que_id_integer",request.getParameter("que_id"));		// !!!!! SAGAR WAS HERE !!!!
+						
 				}	
                 
 				else
@@ -179,7 +180,9 @@
 						session.setAttribute("que_id_integer",request.getParameter("que_id"));
 						
 					//request.setPa						
-						
+						//out.println("<form action='add_answer.jsp' method='GET' style='display:inline-block;'"
+							//	+ 	"<input type='hidden' name='que_id' value='"+request.getParameter("que_id") +"'>"
+								//+ "<button type='submit' class='btn btn-primary'> Add Answer </button></form>");
 						
                         out.println("<a href='add_answer.jsp' class='btn btn-primary'>Add Answer &rarr;</a>");
 		}

@@ -109,25 +109,22 @@
         <!-- Blog Entries Column -->
         <div class="col-md-8">
 
-          &nbsp&nbsp&nbsp<h1 class="my-4"><%
-        		  String que_id = (String) session.getAttribute("que_id_integer");
-          int que_id_int = Integer.parseInt(que_id);	
-            		  
-            question q = question.display_single_question(que_id_int); 
-                out.println(q.question);%>
-          </h1><br>
+          &nbsp&nbsp&nbsp
           <div class="container">
  <% 
- 	  que_id = (String) session.getAttribute("que_id_integer");
-    		//out.println(que_id);
-    		//int que_id = request.getParameter("que_id_integer");    				    			
-     que_id_int = Integer.parseInt(que_id);		 
- 
+ 	    				    			
+     
  	  if(request.getMethod().equals("GET"))
 	  {
+ 		 String que_id = (String) session.getAttribute("que_id_integer");
+         int que_id_int = Integer.parseInt(que_id);	
+           		  
+           question q = question.display_single_question(que_id_int); 
+               out.println("<h1 class='my-4'>"+q.question+
+               "</h1><br>");
 		  	out.println("<form action='add_answer.jsp' method='POST' name='answer_form' onsubmit='return validateForm()'>" + 		 
 		    			"<div class='form-group'>"+
-		      			"<textarea class='form-control' rows='5' id='comment' name='answer'></textarea>"
+		      			"<textarea class='form-control' rows='5' id='comment' name=\"answer\"></textarea>"
 		      +"<!-- input type = 'hidden' name='calling_page' value='question_page'-->"+
 		    "</div>"+
 		    "<button type='submit' class='btn btn-primary btn-lg'>SUBMIT</button>"+		  
@@ -137,7 +134,8 @@
 	  else
 	  {
 		  
-		 
+		  String que_id = (String) session.getAttribute("que_id_integer");
+	         int que_id_int = Integer.parseInt(que_id);	
 		  int done_insertion = answer.insert_answer((int)session.getAttribute("user_id"),que_id_int,request.getParameter("answer"));
 			
 			if(done_insertion == 1)
@@ -153,10 +151,11 @@
 				session.setAttribute("message","<div class=\"alert alert-danger alert-dismissible\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>"
 						+	"Answer insertion <strong>failed.</strong> Please try again after some time.</div>");
 			}  
+			//session.removeAttribute("que_id_integer");
 			if(session.getAttribute("admin")!=null)
-				response.sendRedirect("admin_display_answer.jsp?que_id="+que_id);
+				response.sendRedirect("admin_display_answer.jsp?que_id="+que_id_int);
 			else
-				response.sendRedirect("display_answer.jsp?que_id="+que_id);
+				response.sendRedirect("display_answer.jsp?que_id="+que_id_int);
 	  }
   %>
   </div>

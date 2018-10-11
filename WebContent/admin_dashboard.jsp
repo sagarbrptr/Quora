@@ -172,14 +172,14 @@
                                            +    result.get(i).que.username
                                            +   "</b><br>"
                                         		   
-                                          	+	"<form action='vote.jsp' method= post style='display:inline-block;'>"
+                                          	+	"<form action='admin_vote.jsp' method= post style='display:inline-block;'>"
                                           	+	"<input type='hidden' name='type' value='0'>"
                                           	+	"<input type='hidden' name='que_id' value='"+result.get(i).que.que_id +"'>"
                                            	+	"<button type='submit' style=' margin: 0px 0px 0px 600px; border:none;' class='fa fa-thumbs-up w3-xlarge' ></button>"
                                           	+	question.get_up_vote(result.get(i).que.que_id)+
                                         		   "</form>"
                                            
-                                        	+	   "<form action='vote.jsp' method= post style='display:inline-block;'>"
+                                        	+	   "<form action='admin_vote.jsp' method= post style='display:inline-block;'>"
                                          	+	"<input type='hidden' name='type' value='1'>"
                                          	+	"<input type='hidden' name='que_id' value='"+result.get(i).que.que_id +"'>"
                                           +	"<button type='submit' style=' margin:0px 0px 0px 20px; border:none;' class='fa fa-thumbs-down w3-xlarge'></button>"

@@ -1,0 +1,23 @@
+DELIMITER $$
+CREATE TRIGGER flag_all_ans AFTER UPDATE ON Question
+FOR EACH ROW
+BEGIN
+	
+	UPDATE Answer SET flag=1 
+	where NEW.que_id = Answer.que_id and NEW.flag=1;
+
+END$$
+delimiter ;
+
+DELIMITER $$
+CREATE TRIGGER flag_all_que AFTER UPDATE ON User
+FOR EACH ROW
+BEGIN
+	
+	UPDATE Question SET flag=1 
+	where NEW.user_id = Question.user_id and NEW.flag=1;
+
+END$$
+delimiter ;
+
+

@@ -1,0 +1,49 @@
+alter table Answer alter up_vote set default '0';
+
+alter table Answer alter down_vote set default '0';
+
+alter table Answer alter flag set default '0';
+
+ alter table Question alter down_vote set default '0';
+
+alter table Question alter up_vote set default '0';
+
+alter table Question alter flag set default '0';
+
+alter table User add flag int ;
+
+alter table User alter flag set default '0';
+
+alter table User alter admin set default '0';
+
+update User set admin=ifnull(admin,0);
+
+update Answer set down_vote=ifnull(down_vote,0);
+
+update Answer set up_vote=ifnull(up_vote,0);
+
+update Answer set flag=ifnull(flag,0);
+
+update Question set down_vote=ifnull(down_vote,0);
+
+update Question set flag=ifnull(flag,0);
+
+update Question set up_vote=ifnull(up_vote,0);
+
+create table answer_vote( ans_id int, user_id int, up_vote int default 0, down_vote int default 0, primary key(ans_id, user_id));
+
+create table question_vote ( que_id int, user_id int, up_vote int default 0, down_vote int default 0, primary key(que_id, user_id));
+
+
+``````````````````````````````````````````````````````````````````````````````````````````````````````````````
+home query 
+
+ update Quetion SET down_vote = ( select sum(down_vote) from question_vote where Question.que_id = 
+ question_vote.que_id);
+
+ update Quetion SET up_vote = ( select sum(up_vote) from question_vote where Question.que_id = question_vote.que_id);
+ 
+ 
+ update Answer SET up_vote = ( select sum(up_vote) from answer_vote where Answer.ans_id = answer_vote.que_id);
+ 
+  update Answer SET up_vote = ( select sum(up_vote) from answer_vote where Answer.ans_id = answer_vote.que_id);

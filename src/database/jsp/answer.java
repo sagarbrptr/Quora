@@ -157,6 +157,7 @@ public class answer
              if(curr_vote == 1)
              {
             	 System.out.println("Already voted");
+            	 con.close();
             	 return -1; 				//
              }	
              
@@ -210,6 +211,7 @@ public class answer
              
              if(curr_vote == 1)
              {
+            	 con.close();
             	 System.out.println("Already voted");
             	 return -1; 				//
              }	
@@ -246,9 +248,13 @@ public class answer
         	 Statement query = con.createStatement();
         	 ResultSet rs = query.executeQuery(get_vote);
              while(rs.next())
-            	 return rs.getInt(1);
+             {
+            	 int ret_val=rs.getInt(1);
+            	 con.close();
+            	 return ret_val;
+             }
              con.close(); 
-             return 1;
+             return 0;
         }
         
         catch(Exception E)
@@ -274,9 +280,13 @@ public class answer
         	 Statement query = con.createStatement();
         	 ResultSet rs = query.executeQuery(get_vote);
              while(rs.next())
-            	 return rs.getInt(1);
+             {
+            	 int ret_val=rs.getInt(1);
+            	 con.close();
+            	 return ret_val;
+             }
              con.close(); 
-             return 1;
+             return 0;
         }
         
         catch(Exception E)

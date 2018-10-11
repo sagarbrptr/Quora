@@ -14,11 +14,17 @@
 <% 
 	if((request.getSession(false) == null) || (session.getAttribute("username")==null) )
 	{
+		//out.println("IGI");
+		session.setAttribute("message","<div class=\"alert alert-danger alert-dismissible fade show\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>"
+		+	"Please <strong>Login</strong> first</div>");
 		response.sendRedirect("login.jsp");
-		
-		System.out.println("SESSION CHECK IN VOTE.jsp");
+		out.println("<a class=\"btn btn-outline-primary text-light\" href='login.jsp' >Login</a>");
+		out.println(
+	         "<span class='sr-only'>(current)</span>"
+	         +"</a>");
+		 				
 	}
-	if(request.getParameter("type").equals("0"))	//up vote	question
+	else if(request.getParameter("type").equals("0"))	//up vote	question
 	{
 		int que_id=Integer.parseInt(request.getParameter("que_id"));
 		int user_id=(int)session.getAttribute("user_id");
@@ -34,7 +40,7 @@
 
 		response.sendRedirect("index.jsp");
 	}
-	if(request.getParameter("type").equals("1"))	//down vote	question
+	else if(request.getParameter("type").equals("1"))	//down vote	question
 	{
 		int que_id=Integer.parseInt(request.getParameter("que_id"));
 		int user_id=(int)session.getAttribute("user_id");
@@ -47,7 +53,7 @@
 					+	"<strong>Successfully</strong> downvoted </div>");
 		response.sendRedirect("index.jsp");
 	}
-	if(request.getParameter("type").equals("2"))	//up vote answer
+	else if(request.getParameter("type").equals("2"))	//up vote answer
 	{
 		int ans_id=Integer.parseInt(request.getParameter("ans_id"));
 		int user_id=(int)session.getAttribute("user_id");
@@ -60,7 +66,7 @@
 					+	"<strong>Successfully</strong> upvoted! </div>");
 		response.sendRedirect("display_answer.jsp?que_id="+request.getParameter("que_id"));
 	}
-	if(request.getParameter("type").equals("3"))	//down vote	answer
+	else if(request.getParameter("type").equals("3"))	//down vote	answer
 	{
 		int ans_id=Integer.parseInt(request.getParameter("ans_id"));
 		int user_id=(int)session.getAttribute("user_id");

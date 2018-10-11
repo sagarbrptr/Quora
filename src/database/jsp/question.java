@@ -38,7 +38,7 @@ public class question
 
             catch(Exception e)
             {
-                System.out.println("ERROR!!!\n");
+                System.out.println("ERROR question.java in insert_question!!!\n");
                 return 0;			// print error
             }
     }
@@ -99,7 +99,7 @@ public class question
         
         catch(Exception e)
         {
-            System.out.println("ERROR!!!\n");
+            System.out.println("ERROR question.java in search question !!!\n");
             //return null;
             return result;
         }
@@ -150,7 +150,7 @@ public class question
         
         catch(Exception e)
         {
-            System.out.println("ERROR in display of one question!!!\n");
+            System.out.println("ERROR question.java  in display of one question!!!\n");
             return result;
             //return 0;
         }
@@ -189,6 +189,7 @@ public class question
              if(curr_vote == 1)
              {
             	 System.out.println("Already voted");
+            	 con.close();
             	 return -1; 				//
              }	
              
@@ -201,7 +202,7 @@ public class question
         
         catch(Exception E)
         {
-        	System.out.println("ERROR!!!\n");
+        	System.out.println("ERROR question.java  in up vote!!!\n");
             //return null;
             return 0;
         }
@@ -241,6 +242,7 @@ public class question
              if(curr_vote == 1)
              {
             	 System.out.println("Already voted");
+            	 con.close();
             	 return -1; 				//
              }	
              
@@ -253,7 +255,7 @@ public class question
         
         catch(Exception E)
         {
-        	System.out.println("ERROR!!!\n");
+        	System.out.println("ERROR question.java  in down_vote!!!\n");
             //return null;
             return 0;
         }
@@ -275,14 +277,18 @@ public class question
         	 Statement query = con.createStatement();
         	 ResultSet rs = query.executeQuery(get_vote);
              while(rs.next())
-            	 return rs.getInt(1);
+             {
+            	 int ret_val=rs.getInt(1);
+            	 con.close();
+            	 return ret_val;
+             }
              con.close(); 
-             return 1;
+             return 0;
         }
         
         catch(Exception E)
         {
-        	System.out.println("ERROR!!!\n");
+        	System.out.println("ERROR question.java  in get_up_vote!!!\n");
             //return null;
             return 0;
         }
@@ -303,14 +309,18 @@ public class question
         	 Statement query = con.createStatement();
         	 ResultSet rs = query.executeQuery(get_vote);
              while(rs.next())
-            	 return rs.getInt(1);
+             {
+            	 int ret_val=rs.getInt(1);
+            	 con.close();
+            	 return ret_val;
+             }
              con.close(); 
-             return 1;
+             return 0;
         }
         
         catch(Exception E)
         {
-        	System.out.println("ERROR!!!\n");
+        	System.out.println("ERROR question.java  in get_down_vote!!!\n");
             //return null;
             return 0;
         }

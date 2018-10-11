@@ -60,6 +60,18 @@
         	alert("password does not match please re-enter");
         	return false;
         }
+                       
+        var emailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+		var e = document.forms["Register"]["e-mail"].value;
+		if(emailformat.test(e))
+		{
+			return true;
+		}
+		else
+		{
+			alert("invalid email");
+			return false;
+		}
         
     }
     
@@ -92,7 +104,8 @@
             </div>
             <div class="form-group">
               <div class="form-label-group">
-                <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="required">
+                <input type="email" id="inputEmail" class="form-control" placeholder="Email address"
+                 required="required" name="e-mail">
                 <label for="inputEmail">Email address</label>
               </div>
             </div>

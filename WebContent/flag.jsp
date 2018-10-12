@@ -19,7 +19,7 @@
 		
 		int res=Admin.flag_question(que_id);
 		out.println("Flagged Question Successfully");
-		session.setAttribute("message","<div class=\"alert alert-danger alert-dismissible fade show\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>"
+		session.setAttribute("message","<div class=\"alert alert-success alert-dismissible fade show\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>"
 		+	"<strong>Successfully</strong> deleted the question </div>");
 		response.sendRedirect("admin_dashboard.jsp");
 	}
@@ -29,7 +29,7 @@
 		
 		int res=Admin.flag_answer(ans_id);
 		out.println("Flagged Answer Successfully");
-		session.setAttribute("message","<div class=\"alert alert-danger alert-dismissible fade show\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>"
+		session.setAttribute("message","<div class=\"alert alert-success alert-dismissible fade show\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>"
 		+	"<strong>Successfully</strong> deleted the answer </div>");
 		response.sendRedirect("admin_display_answer.jsp?que_id="+request.getParameter("que_id"));
 	}
@@ -39,7 +39,7 @@
 		
 		int res=Admin.flag_user(user_id);
 		out.println("Flagged User Successfully");
-		session.setAttribute("message", "<div class=\"alert alert-danger alert-dismissible fade show\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>"
+		session.setAttribute("message", "<div class=\"alert alert-success alert-dismissible fade show\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>"
 				+	"<strong>Successfully</strong> deleted the user </div>");
 		response.sendRedirect("admin_user_display.jsp");
 	}

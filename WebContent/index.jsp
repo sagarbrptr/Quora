@@ -42,7 +42,15 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="index.jsp">PICT QUORA</a>
+      <% if(session.getAttribute("admin")==null)
+	  	{
+	  		out.println("<a class=\"navbar-brand\" href=\"index.jsp\">PICT QUORA</a>");
+	  	}
+      	else
+      	{
+      		out.println("<a class=\"navbar-brand\" href=\"admin_dashboard.jsp\">PICT QUORA</a>");
+      	}
+       %> 
         <ul class="navbar-nav">
           <li class="nav-item">
           </li>

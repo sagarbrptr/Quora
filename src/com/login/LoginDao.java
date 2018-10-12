@@ -27,11 +27,21 @@ public class LoginDao {
             ResultSet rs = st.executeQuery();
             if(rs.next())
             {
-            	con.close();
-            	return true;
+            	if(rs.getInt(5) == 0)
+            	{
+	            	con.close();
+	            	return true;
+            	}
+            	
+            	else
+            	{
+            		con.close();
+            		return false;
+            	}
             	
             }
-           
+            con.close();
+            return false;
         }
 
         catch(Exception e)

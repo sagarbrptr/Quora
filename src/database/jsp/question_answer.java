@@ -226,17 +226,21 @@ public class question_answer {
 	                String que_id_string = Integer.toString(rs.getInt(1));
 	                
 	                String get_ans_query = "SELECT * FROM Answer where que_id = '"+
-	                        que_id_string + "' order by up_vote desc, down_vote asc limit 1;";
+	                        que_id_string + "' order by up_vote desc, down_vote asc;";
 	                
 	                sub_query = con.createStatement();
 	                
 	                ResultSet get_one_ans =  sub_query.executeQuery(get_ans_query);
+	                
+	                int got_answer=0;
 	                 
-	                while(get_one_ans.next())		
-	                {
+	                while(get_one_ans.next() && got_answer==0)		
+	                {	                		                
 	                	
-	                	if(get_one_ans.getInt(7)==0)	// pata nahi kyu nahi chal raha
+	                	if(get_one_ans.getInt(7)==0)
 	                	{
+	                		got_answer = 1;
+	                		
 	                		int count=1;
 		                    a.answer = get_one_ans.getString(4);
 		                    a.ans_id = get_one_ans.getInt(1);

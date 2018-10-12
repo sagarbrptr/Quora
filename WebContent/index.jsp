@@ -182,17 +182,15 @@
         		<i  style='margin:0px 0px 0px 0px;' class='fa fa-thumbs-down w3-xlarge'>1</i>*/
            %>
           
-          <% /* <!-- Pagination -->
+          <!-- Pagination -->
           <ul class="pagination justify-content-center mb-4">
             <li class="page-item">
-              <a class="page-link" href="#">&larr; Older</a>
+              <br>
             </li>
             <li class="page-item disabled">
-              <a class="page-link" href="#">Newer &rarr;</a>
+              <br>
             </li>
-          </ul>*/
-		%>
-
+          </ul>
         </div>
 
         <!-- Sidebar Widgets Column -->

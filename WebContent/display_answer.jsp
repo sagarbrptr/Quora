@@ -192,7 +192,7 @@
 							//	+ 	"<input type='hidden' name='que_id' value='"+request.getParameter("que_id") +"'>"
 								//+ "<button type='submit' class='btn btn-primary'> Add Answer </button></form>");
 						
-                        out.println("<a href='add_answer.jsp' class='btn btn-primary'>Add Answer &rarr;</a>");
+                        out.println("<a href='add_answer.jsp' class='btn btn-primary'>Add Answer &rarr;</a><br>");
 		}
                 
                 
@@ -200,16 +200,15 @@
          
           
 
-          <% /* <!-- Pagination -->
+           <!-- Pagination -->
           <ul class="pagination justify-content-center mb-4">
             <li class="page-item">
-              <a class="page-link" href="#">&larr; Older</a>
+              <br>
             </li>
             <li class="page-item disabled">
-              <a class="page-link" href="#">Newer &rarr;</a>
+              <br>
             </li>
-          </ul>*/
-		%>
+          </ul>
 
         </div>
 
@@ -268,7 +267,7 @@
     <!-- /.container -->
 
     <!-- Footer -->
-    <footer class="py-5 bg-dark">
+    <footer class="py-5 bg-dark" style="bottom: 0; width: 100%;">
       <div class="container">
         <p class="m-0 text-center text-white">Copyright &copy; PICT Quora 2018</p>
       </div>

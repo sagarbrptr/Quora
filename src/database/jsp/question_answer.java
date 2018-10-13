@@ -7,7 +7,9 @@ package database.jsp;
 import java.sql.*;
 import java.util.*;
 import java.sql.CallableStatement;
-
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  *
@@ -209,10 +211,19 @@ public class question_answer {
 	                	 q.username = username_rs.getString(1);
 	//----------------------------------------------------------------------------------------------------------------------------                 
 	                 
+	                 q.user_id = rs.getInt(2);
 	                 q.que_id = rs.getInt(1);
 	                 q.question = rs.getString(3);
 	                 q.upvote = rs.getInt(4);
 	                 q.downvote = rs.getInt(5);
+	                 
+	                 DateFormat df = new SimpleDateFormat("dd MMMM yyyy ");
+	                   
+	                 java.util.Date date;
+	                 date = new java.util.Date(rs.getTimestamp(7).getTime());
+	                 q.Date=df.format(date);
+	                 
+	                 //q.Date = rs.getString(7);
 	                 
 	                //Add one answer to be displayed
 	                
@@ -246,9 +257,16 @@ public class question_answer {
 		                    a.ans_id = get_one_ans.getInt(1);
 		                    a.upvote = get_one_ans.getInt(5);
 		                    a.downvote = get_one_ans.getInt(6);
+		                    a.user_id = get_one_ans.getInt(2);
+		                    //System.out.println(get_one_ans.getTimestamp(8));
+		                    //a.Date = get_one_ans.getString(8);
+		                    
+		                    
+		                    
+		                    
 		                    
 		                    String get_username_ans = "SELECT username,admin FROM User WHERE user_id = "+"'"+ get_one_ans.getInt(3)+"';";		// obtain username from user_id_ans
-		                 
+		                    
 		                    Statement sub_sub_query = con.createStatement();
 		                    ResultSet username_ans =  sub_sub_query.executeQuery(get_username_ans); 
 		
@@ -284,7 +302,7 @@ public class question_answer {
         
         catch(Exception e)
         {
-            System.out.println("ERROR!!!\n");
+            System.out.println("ERROR in search_question_answer \"\"!!!\n");
             //return null;
             return result;
         }

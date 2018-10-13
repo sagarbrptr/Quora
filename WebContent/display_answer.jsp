@@ -149,18 +149,31 @@
                                         
                             
                             
-                            out.println("<p class='card-text'>"+
+                            out.println("<table><tr><td width=\"90%\">"+
+                            				"<p class='card-text'>"+
                                             result.get(i).answer + " " + 
-                                          "</p>");
-                                 
+                                          "</p></td>");
+                            if(session.getAttribute("username")!=null&&session.getAttribute("username").equals(result.get(i).username))
+                            {
+                       
+                            	out.println("<td width=\"5%\"><form action='modify_answer.jsp' method= post style='display:inline-block;'>"
+                                  	+	"<input type='hidden' name='type' value='1'>"	//1 for modify answer
+                                  	+	"<input type='hidden' name='ans_id' value='"+result.get(i).ans_id +"'>"
+                                  	+	"<input type='hidden' name='answer' value='"+result.get(i).answer +"'>"
+                                  			+	"<input type='hidden' name='que_id' value='"+que_id_integer +"'>"
+                                   +	"<button  type='submit' style=' border:none;' class='fa fa-edit w3-xxxlarge '></button></form></td>");
+                            }
+                            out.println("</tr></table>");     
                         
                             
                             out.println("</div>"+
                                         "<div class='card-footer text-muted'>"
-                                           + "Posted by "
-                                           + "<b>"
-                                           +    result.get(i).username
-                                           +   "</b><br>"
+                                        		 + "Posted by "
+                                                 + "<b>"
+                                                 +    result.get(i).username
+                                                 +   "</b> on "
+                                                 + 	result.get(i).Date +
+                                                 "<br>"
                                            +	"<form action='vote.jsp' method= post style='display:inline-block;'>"
                                          	+	"<input type='hidden' name='type' value='2'>"
                                          	+ 	"<input type='hidden' name='que_id' value='"+request.getParameter("que_id") +"'>"
@@ -230,7 +243,7 @@
               <div class="row">
                 <div class="col-lg-6">
                   <ul class="list-unstyled mb-0">
-                     <li>
+                    <li>
                       <a href="search_question.jsp?question_to_be_searched=Admission">Admission</a>
                     </li>
                     <li>
@@ -238,6 +251,9 @@
                     </li>
                     <li>
                       <a href="search_question.jsp?question_to_be_searched=Cut-off">Cut-off</a>
+                    </li>
+                    <li>
+                      <a href="search_question.jsp?question_to_be_searched=Campus">Campus</a>
                     </li>
                   </ul>
                 </div>
@@ -249,7 +265,12 @@
                     <li>
                       <a href="search_question.jsp?question_to_be_searched=Placement">Placement</a>
                     </li>
-
+					 <li>
+                      <a href="search_question.jsp?question_to_be_searched=Assignment">Assignment</a>
+                    </li>
+                    <li>
+                      <a href="search_question.jsp?question_to_be_searched=Event">Event</a>
+                    </li>
                   </ul>
                 </div>
               </div>

@@ -164,26 +164,40 @@
 				{
 					for(int i=0;i<result.size();i++)
 					{
-                          //<!-- Blog Post -->
-                          out.println(
-                                  "<div class='card mb-4'>"+
-                                      "<div class='card-body'>"
-                                       );
-                                      
-                          
-                          
-                          out.println("<p class='card-text'>"+
-                                          result.get(i).answer + " " + 
-                                        "</p>");
+						//<!-- Blog Post -->
+                        out.println(
+                                "<div class='card mb-4'>"+
+                                    "<div class='card-body'>"
+                                     );
+                                    
+                        
+                        
+                        out.println("<table><tr><td width=\"90%\">"+
+                        				"<p class='card-text'>"+
+                                        result.get(i).answer + " " + 
+                                      "</p></td>");
+                        if(session.getAttribute("username")!=null&&session.getAttribute("username").equals(result.get(i).username))
+                        {
+                   
+                        	out.println("<td width=\"5%\"><form action='modify_answer.jsp' method= post style='display:inline-block;'>"
+                              	+	"<input type='hidden' name='type' value='1'>"	//1 for modify answer
+                              	+	"<input type='hidden' name='ans_id' value='"+result.get(i).ans_id +"'>"
+                              	+	"<input type='hidden' name='answer' value='"+result.get(i).answer +"'>"
+                              			+	"<input type='hidden' name='que_id' value='"+que_id_integer +"'>"
+                               +	"<button  type='submit' style=' border:none;' class='fa fa-edit w3-xxxlarge '></button></form></td>");
+                        }
+                        out.println("</tr></table>");   
                                
                       
                           
                           out.println("</div>"+
                                       "<div class='card-footer text-muted'>"
-                                         + "Posted by <b>"
-                                         
-                                         +    result.get(i).username
-                                         + "</b><br>"
+                                    		  + "Posted by "
+                                              + "<b>"
+                                              +    result.get(i).username
+                                              +   "</b> on "
+                                              + 	result.get(i).Date +
+                                              "<br>"
                                       		 
                                          +	"<form action='admin_vote.jsp' method= post style='display:inline-block;'>"
                                        	+	"<input type='hidden' name='type' value='2'>"

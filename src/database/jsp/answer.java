@@ -5,8 +5,11 @@
  */
 package database.jsp;
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
+import java.util.Date;
 /**
  *
  * @author sagar
@@ -15,12 +18,13 @@ public class answer
 {
     
     public String username, answer;
-    public int upvote, downvote, ans_id,flag;
+    public int upvote, downvote, ans_id,flag,user_id;
+    public String Date;
     
     public void answer()
     {
-        username=answer="";
-        upvote=downvote=ans_id=flag=0;
+        username=answer=Date="";
+        upvote=downvote=ans_id=flag=user_id=0;
     }
     public static int insert_answer(int user_id,int que_id,String answer)		// user_id == coming from login(session) 
     {																			// question == coming from ask_question page    	
@@ -62,8 +66,10 @@ public class answer
         
         String que_id_string = Integer.toString(que_id);
         
-        String search_answer_query = "SELECT * from Answer where que_id='"+ que_id_string + "';";        
+        String search_answer_query = "SELECT * from Answer where que_id='"+ que_id_string + "';";    
+        
         ArrayList<answer> result = new ArrayList<answer>();
+        System.out.println("IGI\n"+search_answer_query);
         try
         {
         	Class.forName("com.mysql.jdbc.Driver");
@@ -104,6 +110,12 @@ public class answer
 	                 res.upvote = rs.getInt(5);
 	                 res.downvote = rs.getInt(6);
 	                 
+	                 DateFormat df = new SimpleDateFormat("dd MMMM yyyy ");
+	                   
+	                 java.util.Date date;
+	                 date = new java.util.Date(rs.getTimestamp(8).getTime());
+	                 res.Date=df.format(date);
+	                 
 	                 result.add(res);
 	                 
 	                 len++;
@@ -117,7 +129,7 @@ public class answer
         
         catch(Exception e)
         {
-            System.out.println("ERROR!!!\n");
+            System.out.println("ERROR in answer display!!!\n");
             //return null;
             return result;
         }
@@ -259,7 +271,7 @@ public class answer
         
         catch(Exception E)
         {
-        	System.out.println("ERROR!!!\n");
+        	System.out.println("ERROR in get up vote!!!\n");
             //return null;
             return 0;
         }
@@ -291,10 +303,41 @@ public class answer
         
         catch(Exception E)
         {
-        	System.out.println("ERROR!!!\n");
+        	System.out.println("ERROR in get down vote!!!\n");
             //return null;
             return 0;
         }
+    }
+    
+    public static int modify_answer(int ans_id,String answer)		// user_id == coming from login(session) 
+    {																			// question == coming from ask_question page    	
+        String url = "jdbc:mysql://localhost:3306/quora";
+            String user = "GOD" ;
+            String pass = "Test#123" ;                       
+            System.out.println(answer);                       
+            
+        	//java.sql.Time sqlDate = new java.sql.Time(new java.util.Date().getTime());
+            
+            String sql_insert_query= "UPDATE Answer SET answer = '"+answer+"', ans_date = "+" (select CURRENT_TIMESTAMP) WHERE ans_id = '"+ans_id+"';";                       
+                       
+
+            try
+            {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con = DriverManager.getConnection(url,user,pass);
+
+                Statement query = con.createStatement();
+                query.executeUpdate(sql_insert_query);                
+                System.out.println("in mod ans fn");                               
+                con.close();                
+                return 1;			// print successful
+            }
+
+            catch(Exception e)
+            {
+                System.out.println("ERROR in modify answer!!\n");
+                return 0;			// print error
+            }
     }
     
 }

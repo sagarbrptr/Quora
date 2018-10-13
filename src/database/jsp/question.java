@@ -1,17 +1,19 @@
 package database.jsp;
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
-
+import java.util.Date;
 
 public class question 
 {
-	public String username, question;
-	public int que_id,upvote, downvote;
+	public String username, question, Date;
+	public int que_id,upvote, downvote,user_id;
 	
 	public void question()
 	{
-		username = question = " ";
-		upvote = downvote = 0;
+		username = question = Date=" ";
+		upvote = downvote = user_id = 0;
 	}
 	
     public static int insert_question(int user_id, String question)		// user_id == coming from login(session) 
@@ -85,6 +87,11 @@ public class question
 	                 res.question = rs.getString(3);
 	                 res.upvote = rs.getInt(4);
 	                 res.downvote = rs.getInt(5);
+	                 DateFormat df = new SimpleDateFormat("dd MMMM yyyy ");
+	                   
+	                 java.util.Date date;
+	                 date = new java.util.Date(rs.getTimestamp(7).getTime());
+	                 res.Date=df.format(date);
 	                 
 	                 result.add(res);
 	                 
@@ -111,7 +118,7 @@ public class question
         String user = "GOD" ;
         String pass = "Test#123" ;
         
-        String display_question_query = "SELECT que_id,question,user_id,up_vote,down_vote,flag FROM Question WHERE que_id = "+"'"+que_id+"';";
+        String display_question_query = "SELECT que_id,question,user_id,up_vote,down_vote,flag,que_date FROM Question WHERE que_id = "+"'"+que_id+"';";
         
         question result = new question();
         
@@ -141,6 +148,11 @@ public class question
 	            	 result.question = rs.getString(2);            	 
 	            	 result.upvote = rs.getInt(4);
 	            	 result.downvote = rs.getInt(5);
+	            	 DateFormat df = new SimpleDateFormat("dd MMMM yyyy ");
+	                   
+	                 java.util.Date date;
+	                 date = new java.util.Date(rs.getTimestamp(7).getTime());
+	                 result.Date=df.format(date);
             	 }
              }
              
@@ -324,6 +336,35 @@ public class question
             //return null;
             return 0;
         }
+    }
+    
+    public static int modify_question(int que_id, String question)		// user_id == coming from login(session) 
+    {																			// question == coming from ask_question page    	
+        String url = "jdbc:mysql://localhost:3306/quora";
+            String user = "GOD" ;
+            String pass = "Test#123" ;
+            
+            java.sql.Time sqlDate = new java.sql.Time(new java.util.Date().getTime());
+            
+            String sql_insert_query= "UPDATE Question SET question = '"+question+"', que_date = (select CURRENT_TIMESTAMP)  WHERE que_id = '"+que_id+"';";                       
+
+            try
+            {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con = DriverManager.getConnection(url,user,pass);
+
+                Statement query = con.createStatement();
+                query.executeUpdate(sql_insert_query);                
+                                               
+                con.close();                
+                return 1;			// print successful
+            }
+
+            catch(Exception e)
+            {
+                System.out.println("ERROR question.java in modify_question!!!\n");
+                return 0;			// print error
+            }
     }
     
 }

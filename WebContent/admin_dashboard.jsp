@@ -156,15 +156,23 @@
 			for(int i=0;i<result.size();i++)
 			{
                             //<!-- Blog Post -->
-                            out.println(
+                           out.println(
                                     "<div class='card mb-4'>"+
                                         "<div class='card-body'>"+
-                                         "<h2 class='card-title'>");
+                                         "<table><tr><td width=\"90%\"><h2 class='card-title'  >");
                                         
-                            out.println(result.get(i).que.question + " " + "</h2>");
-                            
-                            
-                            out.println("<p class='card-text'>");
+                            out.println(result.get(i).que.question +" "+"</h2></td>" );
+                            if(session.getAttribute("username")!=null&&session.getAttribute("username").equals(result.get(i).que.username))
+                            {
+                       
+                            	out.println("<td width=\"5%\"><form action='modify_question.jsp' method= post style='display:inline-block;'>"
+                                  	+	"<input type='hidden' name='type' value='0'>"	//0 for modify question
+                                  	+	"<input type='hidden' name='que_id' value='"+result.get(i).que.que_id +"'>"
+                                  	+	"<input type='hidden' name='question' value='"+result.get(i).que.question +"'>"
+                                  	
+                                   +	"<button  type='submit' style=' border:none;' class='fa fa-edit w3-xxxlarge '></button></form></td>");
+                            }
+                            out.println("</tr></table><p class='card-text'>");
                             if(result.get(i).ans.answer==null)
                             	out.println("No answer for the question.");
                            	else                
@@ -178,11 +186,12 @@
                                             +"Read More &rarr;</a>"+ 
                                         "</div>"+
                                         "<div class='card-footer text-muted'>"
-                                           + "Posted by "
-                                           + "<b>"
-                                           +    result.get(i).que.username
-                                           +   "</b><br>"
-                                        		   
+                                        		+ "Posted by "
+                                                + "<b>"
+                                                +    result.get(i).que.username
+                                                +   "</b> on "
+                                                + 	result.get(i).que.Date 
+                                               + "<br>"   
                                           	+	"<form action='admin_vote.jsp' method= post style='display:inline-block;'>"
                                           	+	"<input type='hidden' name='type' value='0'>"
                                           	+	"<input type='hidden' name='que_id' value='"+result.get(i).que.que_id +"'>"

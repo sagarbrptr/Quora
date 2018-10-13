@@ -114,11 +114,12 @@
             <i class="fas fa-user-alt-slash"></i>
             <span>Deleted Users</span></a>
         </li>
-         <li class="nav-item">
+         <% /*<li class="nav-item">
           <a class="nav-link" href="admin_deleted_question_display.jsp">
             <i class="fas fa-exclamation-circle"></i>
             <span>Deleted Question</span></a>
-        </li>
+        </li>*/
+        %>
       </ul>
 
       <div id="content-wrapper">

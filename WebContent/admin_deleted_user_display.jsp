@@ -1,6 +1,6 @@
 <%@ page import="java.sql.*"%>
 <%@ page import="java.util.*"%>
-<%@ page import="database.jsp.*"%>
+<%@ page import="admin.jsp.*"%>
 <%@ page import="java.util.ArrayList" %> 
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -59,7 +59,7 @@
       <!-- Navbar Search -->
       <form class="d-none d-md-inline-block form-inline mr-auto ml-0 ml-md-5 my-2 my-md-0" action="admin_search_question.jsp" method="post">
         <div class="input-group">
-
+         
            <form class="form-inline">
               <input type="text" class="form-control" name="question_to_be_searched"
               placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
@@ -74,7 +74,7 @@
         </div>
       </form>
 
-			<% out.println("<form method='get' action='Logout'>"
+		<% out.println("<form method='get' action='Logout'>"
 			 				    +
 			 				    "<button class=\"btn btn-outline-primary text-light\" type='submit' value='Logout' >Logout"	+"</button>"
 			 				  
@@ -92,7 +92,7 @@
 
       <!-- Sidebar -->
       <ul class="sidebar navbar-nav">
-        <li class="nav-item active">
+        <li class="nav-item">
           <a class="nav-link" href="admin_dashboard.jsp">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span>
@@ -109,7 +109,7 @@
             <i class="fa fa-user"></i>
             <span>Users</span></a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item active">
           <a class="nav-link" href="admin_deleted_user_display.jsp">
             <i class="fas fa-user-alt-slash"></i>
             <span>Deleted Users</span></a>
@@ -126,99 +126,79 @@
         <div class="container-fluid">
 		 <div class="container">
 
-      
+     	
 
-        <!-- Blog Entries Column -->
-        <div class="col-md-10">
-		<%
-		
+       	 
+  			 
+
+       	  <%
+       	  
 			if(session.getAttribute("message")!=null)
 			{
 				
     			out.println(session.getAttribute("message"));
     			session.removeAttribute("message");
     		}
-    	%>
-           
-          <% out.println("<br><h2 class='card-title'>Showing results for "+'"'); 
-          out.println(request.getParameter("question_to_be_searched")+" "+'"');
-      out.println("</h2>");
-      
-      ArrayList<question_answer> result = question_answer.search_question_answer(request.getParameter("question_to_be_searched"));
-    
-          if(result.size() == 0)
-          {
-          	out.println("No match for given keyword");		
-			}	
-	else
-	{
-		for(int i=0;i<result.size();i++)
-		{
-                      //<!-- Blog Post -->
-                      out.println(
-                              "<div class='card mb-4'>"+
-                                  "<div class='card-body'>"+
-                                   "<h2 class='card-title'>");
-                                  
-                      out.println(result.get(i).que.question + " " + "</h2>");
+       	  
+    	%>	
+    	
+          <div class="card mb-3">
+             
+            <div class="card-header">
+        
+              <i class="fas fa-table"></i>
+              Deleted User Table</div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>User Id</th>
+                      <th>User name</th>
+                      <th>Type</th>
                       
-                      
-                      out.println("<p class='card-text'>");
-                      if(result.get(i).ans.answer==null)
-                      	out.println("No answer for the question.");
-                     	else                
-                     		out.println(result.get(i).ans.answer);
-                      out.println(" " + "</p>");
-                           
+                    </tr>
+                  </thead>
                   
-                      
-                      out.println("<a href='" + "admin_display_answer.jsp?que_id="+
-                              result.get(i).que.que_id +"' class='btn btn-primary'>"
-                              +"Read More &rarr;</a>"+ 
-                          "</div>"+
-                          "<div class='card-footer text-muted'>"
-                             + "Posted by "
-                             + "<b>"
-                             +    result.get(i).que.username
-                             +   "</b><br>"
-                            
-                            	+	"<form action='admin_vote.jsp' method= post style='display:inline-block;'>"
-                            	+	"<input type='hidden' name='type' value='0'>"
-                            	+	"<input type='hidden' name='que_id' value='"+result.get(i).que.que_id +"'>"
-                             +	"<button type='submit' style=' margin: 0px 0px 0px 600px; border:none;' class='fa fa-thumbs-up w3-xlarge'></button>"
-                            	+	question.get_up_vote(result.get(i).que.que_id)+
-                          		   "</form>"
-                             
-                          	+	   "<form action='admin_vote.jsp' method= post style='display:inline-block;'>"
-                           	+	"<input type='hidden' name='type' value='1'>"
-                           	+	"<input type='hidden' name='que_id' value='"+result.get(i).que.que_id +"'>"
-                            +	"<button type='submit' style=' margin:0px 0px 0px 20px; border:none;' class='fa fa-thumbs-down w3-xlarge'></button>"
-                          		  +	question.get_down_vote(result.get(i).que.que_id)+
-                         		   "</form>"
-                     		 
-                          		   +	"<form action='flag.jsp' method= post style='display:inline-block;'>"
-                                   	+	"<input type='hidden' name='type' value='0'>"
-                                   	+	"<input type='hidden' name='que_id' value='"+result.get(i).que.que_id +"'>"
-                                    +	"<button type='submit' style=' margin: 0px 0px 0px 10px; border:none;' class='fas fa-trash-alt w3-xlarge'></button>"
-                                   	+"</form>"
-                             +"</div>"
-                      +"</div>");
-
-                  }
-	}			          %>
-          
-
-        <!-- Pagination -->
-          <ul class="pagination justify-content-center mb-4">
-            <li class="page-item">
-              <br>
-            </li>
-            <li class="page-item disabled">
-              <br>
-            </li>
-          </ul>
-
-        </div>
+                  <tbody>
+                    
+              <%
+                    ArrayList<User> result = User.get_all_flagged_users();
+                    
+		              if(result.size() == 0)
+		              {
+		              		out.println("<tr> NO USERS FOUND </tr>");		// !!!!! SAGAR WAS HERE !!!!
+						}
+		              else
+		              {
+		            	  for(int i=0;i<result.size();i++)
+		            	  {
+		            		  out.println("<tr>");
+		            		  out.println("<td>"+ result.get(i).user_id +"</td>");
+		            		  out.println("<td>"+ result.get(i).username +"</td>");
+		            		  out.println("<td>"+ result.get(i).type +"</td>");
+		            		 /* out.println("<td>"
+		            		  +	"<form action='flag.jsp' method= post style='display:inline-block;'>"
+                             	+	"<input type='hidden' name='type' value='2'>"	//flag user type 2
+                             	+	"<input type='hidden' name='user_id' value='"+result.get(i).user_id +"'>"
+                              +	"<button type='submit' style=' border:none;' class='fas fa-trash-alt w3-xlarge'></button>"
+                             	+"</form>"+"</td>");*/
+		            		  out.println("</tr>");
+		            	  }
+		              }
+                    
+                    %>
+                   
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            </div>
+            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+          </div>
+                    
+		</div>
+        
          
 
         </div>

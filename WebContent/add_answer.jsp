@@ -176,7 +176,11 @@
 
         <!-- Sidebar Widgets Column -->
         <div class="col-md-4">
-
+		<ul>
+		
+		<br><br>
+		
+		</ul>
           <!-- Search Widget -->
           <br><br>
            

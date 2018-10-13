@@ -178,12 +178,19 @@
 		            		  out.println("<td>"+ result.get(i).user_id +"</td>");
 		            		  out.println("<td>"+ result.get(i).username +"</td>");
 		            		  out.println("<td>"+ result.get(i).type +"</td>");
-		            		  out.println("<td>"
+		            		  if(result.get(i).type=="USER")
+		            		  {
+		            			  out.println("<td>"
 		            		  +	"<form action='flag.jsp' method= post style='display:inline-block;'>"
                              	+	"<input type='hidden' name='type' value='2'>"	//flag user type 2
                              	+	"<input type='hidden' name='user_id' value='"+result.get(i).user_id +"'>"
                               +	"<button type='submit' style=' border:none;' class='fas fa-trash-alt w3-xlarge'></button>"
                              	+"</form>"+"</td>");
+		            		  }
+		            		  else
+		            		  {
+		            			  out.println("<td> </td>");
+		            		  }
 		            		  out.println("</tr>");
 		            	  }
 		              }

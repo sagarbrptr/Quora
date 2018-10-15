@@ -125,7 +125,7 @@
 
           </h1>
            
-          <% ArrayList<question_answer> result = question_answer.search_question_answer("");
+          <% ArrayList<question_answer> result = question_answer.search_question_answer_date("");
           
                 if(result.size() == 0)
                 {
@@ -257,8 +257,8 @@
     <span class="caret"></span></button>
     <ul class="dropdown-menu">
       
-      <li><a href="index.jsp" default=true style="color:red; background-color:#f5f5f0;">Up Vote Down Vote</a></li>
-      <li><a href="index_date.jsp">Date added</a></li>
+      <li><a href="index.jsp">Up Vote Down Vote</a></li>
+      <li><a href="index_date.jsp"  default=true style="color:red; background-color:#f5f5f0;">Date added</a></li>
      
     </ul>
   </div>

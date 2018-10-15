@@ -307,4 +307,141 @@ public class question_answer {
             return result;
         }
     }
+    
+    public static ArrayList<question_answer> search_question_answer_date(String keyword)
+    {
+        String url = "jdbc:mysql://localhost:3306/quora";
+        String user = "GOD" ;
+        String pass = "Test#123" ;
+        question_answer ob=new question_answer();
+        ob.callProcedure();		// Procedure Calling is done here
+        String search_questio_query = "SELECT * FROM Question WHERE LOWER(question) LIKE "+"LOWER('%"+keyword+"%') order by que_date desc,up_vote desc, down_vote asc;";
+        ArrayList<question_answer> result = new ArrayList<question_answer>();
+        try
+        {
+        	Class.forName("com.mysql.jdbc.Driver");
+        	Connection con = DriverManager.getConnection(url,user,pass);
+        	
+        	 Statement query = con.createStatement();
+             ResultSet rs = query.executeQuery(search_questio_query);   
+             
+             //System.out.println("IGI\n");
+             
+             int len=0;
+             while(rs.next() )			
+             {
+            	 
+            	 if(rs.getInt(6)==0)
+            	 {
+            	 
+	                 System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "
+	                 +rs.getString(3)+" "+rs.getInt(4));                
+	                 
+	//----------------------------------------------------------------------------------------------------------------------------                 
+	                 String get_username = "SELECT username FROM User WHERE user_id = "+"'"+rs.getInt(2)+"';";		// obtain username from user_id
+	                 
+	                 Statement sub_query = con.createStatement();
+	                 ResultSet username_rs =  sub_query.executeQuery(get_username); 
+	                 
+	                 question q= new question();
+	                 while(username_rs.next())
+	                	 q.username = username_rs.getString(1);
+	//----------------------------------------------------------------------------------------------------------------------------                 
+	                 
+	                 q.user_id = rs.getInt(2);
+	                 q.que_id = rs.getInt(1);
+	                 q.question = rs.getString(3);
+	                 q.upvote = rs.getInt(4);
+	                 q.downvote = rs.getInt(5);
+	                 
+	                 DateFormat df = new SimpleDateFormat("dd MMMM yyyy ");
+	                   
+	                 java.util.Date date;
+	                 date = new java.util.Date(rs.getTimestamp(7).getTime());
+	                 q.Date=df.format(date);
+	                 
+	                 //q.Date = rs.getString(7);
+	                 
+	                //Add one answer to be displayed
+	                
+	                answer a=new answer();
+	                
+	                //get username of answer
+	                 
+	
+	                //get one ans from que_id by upvote desc,downvote asc
+	                
+	                String que_id_string = Integer.toString(rs.getInt(1));
+	                
+	                String get_ans_query = "SELECT * FROM Answer where que_id = '"+
+	                        que_id_string + "' order by ans_date desc,up_vote desc, down_vote asc;";
+	                
+	                sub_query = con.createStatement();
+	                
+	                ResultSet get_one_ans =  sub_query.executeQuery(get_ans_query);
+	                
+	                int got_answer=0;
+	                 
+	                while(get_one_ans.next() && got_answer==0)		
+	                {	                		                
+	                	
+	                	if(get_one_ans.getInt(7)==0)
+	                	{
+	                		got_answer = 1;
+	                		
+	                		int count=1;
+		                    a.answer = get_one_ans.getString(4);
+		                    a.ans_id = get_one_ans.getInt(1);
+		                    a.upvote = get_one_ans.getInt(5);
+		                    a.downvote = get_one_ans.getInt(6);
+		                    a.user_id = get_one_ans.getInt(2);
+		                    //System.out.println(get_one_ans.getTimestamp(8));
+		                    //a.Date = get_one_ans.getString(8);
+		                    
+		                    
+		                    
+		                    
+		                    
+		                    String get_username_ans = "SELECT username,admin FROM User WHERE user_id = "+"'"+ get_one_ans.getInt(3)+"';";		// obtain username from user_id_ans
+		                    
+		                    Statement sub_sub_query = con.createStatement();
+		                    ResultSet username_ans =  sub_sub_query.executeQuery(get_username_ans); 
+		
+		                    while(username_ans.next())
+		                    {
+		                   	 if(username_ans.getInt(2) == 0)
+		                   		 a.username = username_ans.getString(1);
+		                   	 
+		                   	 else
+		                   		 a.username = "admin";
+		                    }
+		                    
+		                    System.out.println(count);
+		                    count++;
+	                	}
+	                }
+	                
+	                 len++;
+	                 // Question_Answer Wrapped object
+	                
+	                question_answer obj= new question_answer();
+	                
+	                obj.que = q;
+	                obj.ans = a;
+	                
+	                result.add(obj);
+            	 }
+             }
+
+             con.close();             
+             return result;				// return  length of array (number of results matched)
+        }
+        
+        catch(Exception e)
+        {
+            System.out.println("ERROR in search_question_answer_date \"\"!!!\n");
+            //return null;
+            return result;
+        }
+    }
 }

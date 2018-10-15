@@ -340,6 +340,72 @@ public class answer
             }
     }
     
+    public static int get_todays_answer()
+    {
+    	String url = "jdbc:mysql://localhost:3306/quora";
+        String user = "GOD" ;
+        String pass = "Test#123" ;
+        
+        String get_vote = "select count(*) from Answer where DATE(ans_date)=DATE(CURRENT_TIMESTAMP) and flag=0;";
+        
+        try
+        {
+        	Class.forName("com.mysql.jdbc.Driver");
+        	Connection con = DriverManager.getConnection(url,user,pass);
+        	
+        	 Statement query = con.createStatement();
+        	 ResultSet rs = query.executeQuery(get_vote);
+             while(rs.next())
+             {
+            	 int ret_val=rs.getInt(1);
+            	 con.close();
+            	 return ret_val;
+             }
+             con.close(); 
+             return 0;
+        }
+        
+        catch(Exception E)
+        {
+        	System.out.println("ERROR in get todays answer!!!\n");
+            //return null;
+            return 0;
+        }
+    }
+    
+    public static int get_total_answer()
+    {
+    	String url = "jdbc:mysql://localhost:3306/quora";
+        String user = "GOD" ;
+        String pass = "Test#123" ;
+        
+        String get_vote = "select count(*) from Answer where flag=0;";
+        
+        try
+        {
+        	Class.forName("com.mysql.jdbc.Driver");
+        	Connection con = DriverManager.getConnection(url,user,pass);
+        	
+        	 Statement query = con.createStatement();
+        	 ResultSet rs = query.executeQuery(get_vote);
+             while(rs.next())
+             {
+            	 int ret_val=rs.getInt(1);
+            	 con.close();
+            	 return ret_val;
+             }
+             con.close(); 
+             return 0;
+        }
+        
+        catch(Exception E)
+        {
+        	System.out.println("ERROR in get todays answer!!!\n");
+            //return null;
+            return 0;
+        }
+    }
+    
 }
 
 

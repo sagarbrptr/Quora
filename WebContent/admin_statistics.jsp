@@ -114,12 +114,11 @@
             <i class="fas fa-user-alt-slash"></i>
             <span>Deleted Users</span></a>
         </li>
-        <li class="nav-item">
+       <li class="nav-item active">
           <a class="nav-link" href="admin_statistics.jsp">
             <i class="far fa-chart-bar"></i>
             <span>Statistics</span></a>
         </li>
-        
       </ul>
 
       <div id="content-wrapper">
@@ -141,80 +140,75 @@
     			session.removeAttribute("message");
     		}
     	%>
-          <h1 class="my-4">TRENDING QUESTIONS
+          <h1 class="my-4">STATISTICS
 
           </h1>
+           <script type = "text/javascript" src = "https://www.gstatic.com/charts/loader.js">
+      </script>
+      <script type = "text/javascript">
+         google.charts.load('current', {packages: ['corechart']});     
+      </script>
+          <div id = "container" style = "width: 550px; height: 400px; margin: 0 auto">
+      </div>
+      <script language = "JavaScript">
+      
+         function drawChart() {
+ 	            // Define the chart to be drawn.
            
-          <% ArrayList<question_answer> result = question_answer.search_question_answer("");
-          
-                if(result.size() == 0)
-                {
-                	out.println("No match for given keyword");
-		}	
-		else
-		{
-			for(int i=0;i<result.size();i++)
-			{
-                            //<!-- Blog Post -->
-                           out.println(
-                                    "<div class='card mb-4'>"+
-                                        "<div class='card-body'>"+
-                                         "<table><tr><td width=\"90%\"><h2 class='card-title'  >");
-                                        
-                            out.println(result.get(i).que.question +" "+"</h2></td>" );
-                            if(session.getAttribute("username")!=null&&session.getAttribute("username").equals(result.get(i).que.username))
-                            {
-                       
-                            	out.println("<td width=\"5%\"><form action='modify_question.jsp' method= post style='display:inline-block;'>"
-                                  	+	"<input type='hidden' name='type' value='0'>"	//0 for modify question
-                                  	+	"<input type='hidden' name='que_id' value='"+result.get(i).que.que_id +"'>"
-                                  	+	"<input type='hidden' name='question' value='"+result.get(i).que.question +"'>"
-                                  	
-                                   +	"<button  type='submit' style=' border:none;' class='fa fa-edit w3-xxxlarge '></button></form></td>");
-                            }
-                            out.println("</tr></table><p class='card-text'>");
-                            if(result.get(i).ans.answer==null)
-                            	out.println("No answer for the question.");
-                           	else                
-                           		out.println(result.get(i).ans.answer);
-                            out.println(" " + "</p>");
-                                 
-                        
-                            
-                            out.println("<a href='" + "admin_display_answer.jsp?que_id="+
-                                            result.get(i).que.que_id +"' class='btn btn-primary'>"
-                                            +"Read More &rarr;</a>"+ 
-                                        "</div>"+
-                                        "<div class='card-footer text-muted'>"
-                                        		+ "Posted by "
-                                                + "<b>"
-                                                +    result.get(i).que.username
-                                                +   "</b> on "
-                                                + 	result.get(i).que.Date 
-                                               + "<br>"   
-                                          	+	"<form action='admin_vote.jsp' method= post style='display:inline-block;'>"
-                                          	+	"<input type='hidden' name='type' value='0'>"
-                                          	+	"<input type='hidden' name='que_id' value='"+result.get(i).que.que_id +"'>"
-                                           	+	"<button type='submit' style=' margin: 0px 0px 0px 600px; border:none;' class='fa fa-thumbs-up w3-xlarge' ></button>"
-                                          	+	question.get_up_vote(result.get(i).que.que_id)+
-                                        		   "</form>"
-                                           
-                                        	+	   "<form action='admin_vote.jsp' method= post style='display:inline-block;'>"
-                                         	+	"<input type='hidden' name='type' value='1'>"
-                                         	+	"<input type='hidden' name='que_id' value='"+result.get(i).que.que_id +"'>"
-                                          +	"<button type='submit' style=' margin:0px 0px 0px 20px; border:none;' class='fa fa-thumbs-down w3-xlarge'></button>"
-                                        		  +	question.get_down_vote(result.get(i).que.que_id)+
-                                       		   "</form>"
-                                       				+	"<form action='flag.jsp' method= post style='display:inline-block;'>"
-                                                 	+	"<input type='hidden' name='type' value='0'>"
-                                                 	+	"<input type='hidden' name='que_id' value='"+result.get(i).que.que_id +"'>"
-                                                  +	"<button type='submit' style=' margin: 0px 0px 0px 10px; border:none;' class='fas fa-trash-alt w3-xlarge'></button>"
-                                                 	+"</form>"
-                                           +"</div>"
-                                    +"</div>");
+            
+            var today_que=<%=question.get_todays_question()%>;
+            var today_ans=<%=answer.get_todays_answer()%>;
+            //document.write(typeof(today_que));
+            var data = google.visualization.arrayToDataTable([
+                ['', 'Value'],
+                ['today\'s question', today_que ],
+                ['today\'s answer', today_ans ],
+             ]);
+            var options = {
+            		vAxis: {
+            	   format: '#,###',
+            	   minValue: 0,
+            	   maxValue: 4
+            	},
+		title: 'Today\'s Activity'}; 
 
-                        }
-		}           %>
+            // Instantiate and draw the chart.
+            var chart = new google.visualization.ColumnChart(document.getElementById('container'));
+            chart.draw(data, options);
+         }
+         google.charts.setOnLoadCallback(drawChart);
+      </script>
+      <div id = "container2" style = "width: 550px; height: 400px; margin: 0 auto">
+      </div>
+	<script language = "JavaScript">
+      
+         function drawChart() {
+ 	            // Define the chart to be drawn.
+           
+            
+            var total_que=<%=question.get_total_question()%>;
+            var total_ans=<%=answer.get_total_answer()%>;
+            //document.write(typeof(today_que));
+            var data = google.visualization.arrayToDataTable([
+                ['', 'Value'],
+                ['total questions', total_que ],
+                ['total answers', total_ans ],
+             ]);
+            var options = {
+            		vAxis: {
+            	   format: '#,###',
+            	   minValue: 0,
+            	   maxValue: 4
+            	},
+		title: 'Total Activity'}; 
+
+            // Instantiate and draw the chart.
+            var chart = new google.visualization.ColumnChart(document.getElementById('container2'));
+            chart.draw(data, options);
+         }
+         google.charts.setOnLoadCallback(drawChart);
+      </script>
+	     
           
 
         <!-- Pagination -->
